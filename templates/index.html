@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HERITAGEGUIDE AI</title>
+    <style>
+        :root {
+            --ink: #2e241d;
+            --muted: #806f61;
+            --paper: #fffaf0;
+            --cream: #f4ead7;
+            --terracotta: #a95135;
+            --gold: #c9974b;
+            --line: rgba(46, 36, 29, 0.12);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 15% 20%, rgba(201,151,75,.18), transparent 26%),
+                radial-gradient(circle at 85% 80%, rgba(169,81,53,.14), transparent 30%),
+                var(--cream);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .app {
+            width: min(980px, 100%);
+            height: min(760px, 94vh);
+            background: rgba(255,250,240,.94);
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 24px 70px rgba(61, 42, 27, .16);
+            display: grid;
+            grid-template-columns: 270px 1fr;
+        }
+
+        .sidebar {
+            background: linear-gradient(155deg, #3c2c22, #684331);
+            color: #fff8eb;
+            padding: 30px 24px;
+            position: relative;
+        }
+
+        .seal {
+            width: 72px;
+            height: 72px;
+            border: 2px solid rgba(255,255,255,.65);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 31px;
+            margin-bottom: 22px;
+        }
+
+        .sidebar h1 {
+            font-size: 25px;
+            line-height: 1.05;
+            margin: 0 0 10px;
+            letter-spacing: .4px;
+        }
+
+        .sidebar p {
+            color: #ead8c3;
+            line-height: 1.6;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .topics {
+            margin-top: 34px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .topic {
+            border: 1px solid rgba(255,255,255,.14);
+            border-radius: 14px;
+            padding: 11px 12px;
+            font-size: 13px;
+            color: #f5e9d8;
+            background: rgba(255,255,255,.05);
+        }
+
+        .main {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mini-seal {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--terracotta);
+            color: white;
+            display: grid;
+            place-items: center;
+            font-size: 19px;
+        }
+
+        .brand strong { display: block; font-size: 16px; }
+        .brand span { color: var(--muted); font-size: 12px; }
+
+        .status {
+            font: 12px Arial, sans-serif;
+            color: #55704d;
+            background: #edf3e9;
+            border-radius: 999px;
+            padding: 7px 11px;
+        }
+
+        .chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .message {
+            max-width: 78%;
+            padding: 15px 17px;
+            border-radius: 18px;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            animation: rise .2s ease;
+        }
+
+        .bot {
+            align-self: flex-start;
+            background: white;
+            border: 1px solid var(--line);
+            border-top-left-radius: 5px;
+        }
+
+        .user {
+            align-self: flex-end;
+            background: var(--terracotta);
+            color: white;
+            border-top-right-radius: 5px;
+        }
+
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 0 26px 14px;
+        }
+
+        .suggestion {
+            border: 1px solid var(--line);
+            background: #fffdf8;
+            color: var(--ink);
+            padding: 8px 11px;
+            border-radius: 999px;
+            cursor: pointer;
+            font: 12px Arial, sans-serif;
+        }
+
+        .suggestion:hover { border-color: var(--gold); }
+
+        .composer {
+            padding: 16px 20px 20px;
+            border-top: 1px solid var(--line);
+        }
+
+        .input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 8px 9px 8px 15px;
+            box-shadow: 0 7px 24px rgba(61,42,27,.06);
+        }
+
+        textarea {
+            flex: 1;
+            resize: none;
+            border: 0;
+            outline: 0;
+            min-height: 42px;
+            max-height: 110px;
+            padding: 10px 0;
+            font: 15px Georgia, serif;
+            color: var(--ink);
+        }
+
+        button.send {
+            border: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--terracotta);
+            color: white;
+            cursor: pointer;
+            font-size: 19px;
+        }
+
+        button.send:disabled { opacity: .55; cursor: wait; }
+
+        @media (max-width: 720px) {
+            body { padding: 0; }
+            .app {
+                height: 100vh;
+                border-radius: 0;
+                grid-template-columns: 1fr;
+            }
+            .sidebar { display: none; }
+            .message { max-width: 88%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="seal">🏛</div>
+            <h1>HERITAGEGUIDE<br>AI</h1>
+            <p>A focused learning companion for history, culture, monuments and heritage conservation.</p>
+            <div class="topics">
+                <div class="topic">🏺 Historical Sites</div>
+                <div class="topic">🧱 Architecture</div>
+                <div class="topic">🎭 Culture & Traditions</div>
+                <div class="topic">🌿 Conservation</div>
+                <div class="topic">📜 Archaeology</div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="brand">
+                    <div class="mini-seal">🏛</div>
+                    <div>
+                        <strong>HERITAGEGUIDE AI</strong>
+                        <span>Heritage learning assistant</span>
+                    </div>
+                </div>
+                <div class="status">● Online</div>
+            </header>
+
+            <section class="chat" id="chat">
+                <div class="message bot">Vanakkam! I’m HERITAGEGUIDE AI. Ask me anything related to heritage, history, culture, monuments, archaeology, or conservation.</div>
+            </section>
+
+            <div class="suggestions">
+                <button class="suggestion" onclick="useSuggestion(this)">What is cultural heritage?</button>
+                <button class="suggestion" onclick="useSuggestion(this)">Explain heritage conservation</button>
+                <button class="suggestion" onclick="useSuggestion(this)">Tell me about UNESCO heritage sites</button>
+            </div>
+
+            <form class="composer" id="chatForm">
+                <div class="input-wrap">
+                    <textarea id="message" placeholder="Ask a heritage-related question..." rows="1"></textarea>
+                    <button class="send" id="sendBtn" type="submit">➤</button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        const form = document.getElementById("chatForm");
+        const input = document.getElementById("message");
+        const chat = document.getElementById("chat");
+        const sendBtn = document.getElementById("sendBtn");
+
+        function addMessage(text, type) {
+            const message = document.createElement("div");
+            message.className = `message ${type}`;
+            message.textContent = text;
+            chat.appendChild(message);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function useSuggestion(button) {
+            input.value = button.textContent;
+            input.focus();
+        }
+
+        input.addEventListener("input", () => {
+            input.style.height = "auto";
+            input.style.height = Math.min(input.scrollHeight, 110) + "px";
+        });
+
+        input.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                form.requestSubmit();
+            }
+        });
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage(message, "user");
+            input.value = "";
+            input.style.height = "auto";
+            sendBtn.disabled = true;
+
+            const thinking = document.createElement("div");
+            thinking.className = "message bot";
+            thinking.textContent = "Exploring the heritage records…";
+            chat.appendChild(thinking);
+            chat.scrollTop = chat.scrollHeight;
+
+            try {
+                const response = await fetch("/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message })
+                });
+
+                const data = await response.json();
+                thinking.remove();
+                addMessage(data.reply || "I could not generate a response.", "bot");
+            } catch (error) {
+                thinking.remove();
+                addMessage("Sorry, something went wrong while connecting to HERITAGEGUIDE AI.", "bot");
+            } finally {
+                sendBtn.disabled = false;
+                input.focus();
+            }
+        });
+    </script>
+</body>
+</html>
